@@ -2,8 +2,8 @@
   <q-page class="q-pa-md">
     <q-list separator bordered>
       <q-item
-        v-for="task in tasks"
-        :key="task.id"
+        v-for="(task,key) in tasks"
+        :key="key"
         @click="task.completed = !task.completed"
         :class="!task.completed ? 'bg-orange-1' : 'bg-grey-4'"
         clickable
@@ -40,33 +40,14 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
   data() {
     return {
-      tasks: [
-        {
-          id: 1,
-          name: "Go to shop",
-          completed: false,
-          dueDate: "2021/04/16",
-          dueTime: "10:30"
-        },
-        {
-          id: 2,
-          name: "Get Apples",
-          completed: false,
-          dueDate: "2021/04/17",
-          dueTime: "11:30"
-        },
-        {
-          id: 3,
-          name: "Get bananas",
-          completed: false,
-          dueDate: "2021/04/18",
-          dueTime: "12:30"
-        }
-      ]
-    };
+    }
+  },
+  computed: {
+    ...mapGetters('tasks',['tasks'])
   }
 };
 </script>
