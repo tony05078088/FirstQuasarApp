@@ -1,8 +1,9 @@
 <template>
-     <q-list
-    v-if="Object.keys(tasksDone).length" 
-    separator 
-    bordered>
+  <div class="q-mt-sm">
+      <list-header
+      bgColor="bg-light-green-3"
+      >Completed</list-header>
+    <q-list separator bordered>
       <task
         v-for="(task, key) in tasksDone"
         :key="key"
@@ -10,18 +11,17 @@
         :id="key"
       ></task>
     </q-list>
+  </div>
 </template>
 
 <script>
 export default {
-    props: ['tasksDone'],
-    components: {
+  props: ["tasksDone"],
+  components: {
     task: require("../Tasks/Task").default,
-    }
-
-}
+    'listHeader': require("../Shared/ListHeader").default    
+  }
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,8 +1,8 @@
 <template>
   <q-page class="q-pa-md">
-    <tasks-todo :tasksTodo="tasksTodo" />
-    <hr />
-    <tasks-done :tasksDone="tasksDone" />
+    <tasks-todo v-if="Object.keys(tasksTodo).length" :tasksTodo="tasksTodo" />
+    <tasks-none v-else></tasks-none>
+    <tasks-done :tasksDone="tasksDone" v-if="Object.keys(tasksDone).length" />
 
     <div class="absolute-bottom text-center q-mb-lg">
       <q-btn
@@ -31,10 +31,16 @@ export default {
   components: {
     "add-task": require("../components/Modals/AddTask").default,
     "tasks-todo": require("components/Tasks/TasksTodo").default,
-    "tasks-done": require("components/Tasks/TasksDone").default
+    "tasks-done": require("components/Tasks/TasksDone").default,
+    "tasks-none": require("components/Tasks/NoTask").default
   },
   computed: {
     ...mapGetters("tasks", ["tasksTodo", "tasksDone"])
+  },
+  mounted() {
+    this.$root.$on("showAddTask", () => {
+      this.showAddTask = true;
+    });
   }
 };
 </script>
