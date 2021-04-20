@@ -1,16 +1,9 @@
 <template>
   <q-page class="q-pa-md">
-    <q-list
-    v-if="Object.keys(tasks).length" 
-    separator 
-    bordered>
-      <task
-        v-for="(task, key) in tasks"
-        :key="key"
-        :task="task"
-        :id="key"
-      ></task>
-    </q-list>
+    <tasks-todo :tasksTodo="tasksTodo" />
+    <hr />
+    <tasks-done :tasksDone="tasksDone" />
+
     <div class="absolute-bottom text-center q-mb-lg">
       <q-btn
         @click="showAddTask = true"
@@ -36,11 +29,12 @@ export default {
     };
   },
   components: {
-    task: require("../components/Tasks/Task").default,
-    "add-task": require("../components/Modals/AddTask").default
+    "add-task": require("../components/Modals/AddTask").default,
+    "tasks-todo": require("components/Tasks/TasksTodo").default,
+    "tasks-done": require("components/Tasks/TasksDone").default
   },
   computed: {
-    ...mapGetters("tasks", ["tasks"])
+    ...mapGetters("tasks", ["tasksTodo", "tasksDone"])
   }
 };
 </script>

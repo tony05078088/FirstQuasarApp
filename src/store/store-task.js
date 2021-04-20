@@ -25,14 +25,13 @@ const state = {
 
 const mutations = {
   updateTask(state, payload) {
-      Object.assign(state.tasks[payload.id],payload.updates)
+    Object.assign(state.tasks[payload.id], payload.updates);
   },
   deleteTask(state, id) {
-      console.log(id)
     Vue.delete(state.tasks, id);
   },
-  addTask(state,payload) {
-      Vue.set(state.tasks,payload.id,payload.task)
+  addTask(state, payload) {
+    Vue.set(state.tasks, payload.id, payload.task);
   }
 };
 
@@ -49,14 +48,31 @@ const actions = {
       id: taskId,
       task: task
     };
-    console.log(payload)
+    console.log(payload);
     commit("addTask", payload);
   }
 };
 
 const getters = {
-  tasks(state) {
-    return state.tasks;
+  tasksTodo(state) {
+    let tasks = {};
+    Object.keys(state.tasks).forEach(key => {
+      let task = state.tasks[key];
+      if (!task.completed) {
+        tasks[key] = task;
+      }
+    });
+    return tasks;
+  },
+  tasksDone(state) {
+    let tasks = {};
+    Object.keys(state.tasks).forEach(key => {
+      let task = state.tasks[key];
+      if (task.completed) {
+        tasks[key] = task;
+      }
+    });
+    return tasks;
   }
 };
 export default {

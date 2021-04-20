@@ -78,8 +78,7 @@ export default {
   methods: {
     ...mapActions("tasks", ["updateTask", "deleteTask"]),
     promptToDelete(id) {
-      this.$q
-        .dialog({
+      this.$q.dialog({
           title: "Confirm",
           message: "Would you like to delete?",
           cancel: true,
