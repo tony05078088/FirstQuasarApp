@@ -1,3 +1,5 @@
+import { uid } from "quasar";
+import Vue from "vue";
 const state = {
   tasks: {
     ID1: {
@@ -21,9 +23,36 @@ const state = {
   }
 };
 
-const mutations = {};
+const mutations = {
+  updateTask(state, payload) {
+      Object.assign(state.tasks[payload.id],payload.updates)
+  },
+  deleteTask(state, id) {
+      console.log(id)
+    Vue.delete(state.tasks, id);
+  },
+  addTask(state,payload) {
+      Vue.set(state.tasks,payload.id,payload.task)
+  }
+};
 
-const actions = {};
+const actions = {
+  updateTask({ commit }, payload) {
+    commit("updateTask", payload);
+  },
+  deleteTask({ commit }, id) {
+    commit("deleteTask", id);
+  },
+  addTask({ commit }, task) {
+    let taskId = uid();
+    let payload = {
+      id: taskId,
+      task: task
+    };
+    console.log(payload)
+    commit("addTask", payload);
+  }
+};
 
 const getters = {
   tasks(state) {

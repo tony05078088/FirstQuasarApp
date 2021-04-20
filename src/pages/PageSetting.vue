@@ -1,53 +1,46 @@
 <template>
   <q-page class="q-pa-md">
-    <q-list separator bordered>
-      <q-item
-        v-for="(task,key) in tasks"
+    <q-list
+    v-if="Object.keys(tasks).length" 
+    separator 
+    bordered>
+      <task
+        v-for="(task, key) in tasks"
         :key="key"
-        @click="task.completed = !task.completed"
-        :class="!task.completed ? 'bg-orange-1' : 'bg-grey-4'"
-        clickable
-        v-ripple
-      >
-        <q-item-section side top>
-          <q-checkbox v-model="task.completed" />
-        </q-item-section>
-
-        <q-item-section>
-          <q-item-label :class="{ 'text-strike': task.completed }">{{
-            task.name
-          }}</q-item-label>
-        </q-item-section>
-
-        <q-item-section side>
-          <div class="row">
-            <div class="column justify-center">
-              <q-icon name="today" size="18px" class="q-mr-xs" />
-            </div>
-            <div class="column">
-              <q-item-label class="row  justify-end" caption>{{
-                task.dueDate
-              }}</q-item-label>
-              <q-item-label class="row  justify-end" caption>{{
-                task.dueTime
-              }}</q-item-label>
-            </div>
-          </div>
-        </q-item-section>
-      </q-item>
+        :task="task"
+        :id="key"
+      ></task>
     </q-list>
+    <div class="absolute-bottom text-center q-mb-lg">
+      <q-btn
+        @click="showAddTask = true"
+        round
+        color="secondary"
+        size="24px"
+        icon="add"
+      />
+    </div>
+
+    <q-dialog v-model="showAddTask">
+      <add-task @close="showAddTask = false"></add-task>
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-    }
+      showAddTask: false
+    };
+  },
+  components: {
+    task: require("../components/Tasks/Task").default,
+    "add-task": require("../components/Modals/AddTask").default
   },
   computed: {
-    ...mapGetters('tasks',['tasks'])
+    ...mapGetters("tasks", ["tasks"])
   }
 };
 </script>
