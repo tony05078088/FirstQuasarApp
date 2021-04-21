@@ -2,6 +2,7 @@
   <q-page class="q-pa-md">
     <div class="row q-mb-lg">
       <search />
+      <sort />
     </div>
     <p
       v-if="
@@ -43,7 +44,8 @@ export default {
     "tasks-todo": require("components/Tasks/TasksTodo").default,
     "tasks-done": require("components/Tasks/TasksDone").default,
     "tasks-none": require("components/Tasks/NoTask").default,
-    search: require("components/Tools/Search").default
+    "search": require("components/Tools/Search").default,
+    "sort": require("components/Tools/Sort").default,
   },
   computed: {
     ...mapGetters("tasks", ["tasksTodo", "tasksDone"]),
