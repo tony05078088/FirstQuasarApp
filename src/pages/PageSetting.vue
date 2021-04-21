@@ -1,7 +1,17 @@
 <template>
   <q-page class="q-pa-md">
+    <div class="row q-mb-lg">
+      <search />
+    </div>
+    <p
+      v-if="
+        search && !Object.keys(tasksTodo).length && !Object.keys(tasksDone).length
+      "
+    >
+      No search results
+    </p>
+    <tasks-none v-if="!Object.keys(tasksTodo).length && !search"></tasks-none>
     <tasks-todo v-if="Object.keys(tasksTodo).length" :tasksTodo="tasksTodo" />
-    <tasks-none v-else></tasks-none>
     <tasks-done :tasksDone="tasksDone" v-if="Object.keys(tasksDone).length" />
 
     <div class="absolute-bottom text-center q-mb-lg">
@@ -21,7 +31,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -32,10 +42,12 @@ export default {
     "add-task": require("../components/Modals/AddTask").default,
     "tasks-todo": require("components/Tasks/TasksTodo").default,
     "tasks-done": require("components/Tasks/TasksDone").default,
-    "tasks-none": require("components/Tasks/NoTask").default
+    "tasks-none": require("components/Tasks/NoTask").default,
+    search: require("components/Tools/Search").default
   },
   computed: {
-    ...mapGetters("tasks", ["tasksTodo", "tasksDone"])
+    ...mapGetters("tasks", ["tasksTodo", "tasksDone"]),
+    ...mapState("tasks", ["search"])
   },
   mounted() {
     this.$root.$on("showAddTask", () => {

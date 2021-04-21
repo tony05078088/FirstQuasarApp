@@ -20,7 +20,8 @@ const state = {
       dueDate: "2021/04/18",
       dueTime: "12:30"
     }
-  }
+  },
+  search: ""
 };
 
 const mutations = {
@@ -32,6 +33,9 @@ const mutations = {
   },
   addTask(state, payload) {
     Vue.set(state.tasks, payload.id, payload.task);
+  },
+  setSearch(state, value) {
+    state.search = value;
   }
 };
 
@@ -48,31 +52,53 @@ const actions = {
       id: taskId,
       task: task
     };
-    console.log(payload);
     commit("addTask", payload);
+  },
+  setSearch({ commit }, value) {
+    commit("setSearch", value);
   }
 };
 
 const getters = {
-  tasksTodo(state) {
+  tasksTodo(state, getters) {
+    let tasksFiltered = getters.tasksFiltered;
     let tasks = {};
-    Object.keys(state.tasks).forEach(key => {
-      let task = state.tasks[key];
+    Object.keys(tasksFiltered).forEach(key => {
+      let task = tasksFiltered[key];
       if (!task.completed) {
         tasks[key] = task;
       }
     });
     return tasks;
   },
-  tasksDone(state) {
+  tasksDone(state, getters) {
+    let tasksFiltered = getters.tasksFiltered;
     let tasks = {};
-    Object.keys(state.tasks).forEach(key => {
-      let task = state.tasks[key];
+    Object.keys(tasksFiltered).forEach(key => {
+      let task = tasksFiltered[key];
       if (task.completed) {
         tasks[key] = task;
       }
     });
     return tasks;
+  },
+  tasksFiltered(state) {
+    let tasksFiltered = {};
+    if (state.search) {
+      //populate the empty object
+      Object.keys(state.tasks).forEach(key => {
+        let task = state.tasks[key];
+        let SearchLowerCase;
+        let taskNameLowerCase;
+        taskNameLowerCase = task.name.toLowerCase();
+        SearchLowerCase = state.search.toLowerCase();
+        if (taskNameLowerCase.includes(SearchLowerCase)) {
+          tasksFiltered[key] = task;
+        }
+      });
+      return tasksFiltered;
+    }
+    return state.tasks;
   }
 };
 export default {
