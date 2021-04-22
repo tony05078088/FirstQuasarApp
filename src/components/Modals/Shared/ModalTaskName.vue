@@ -4,6 +4,7 @@
       outlined
       autofocus
       :value="name"
+      v-select-all
       @input="$emit('update:name', $event)"
       :rules="[val => !!val || 'Field is required']"
       label="Task name"
@@ -13,7 +14,7 @@
       <template v-slot:append>
         <q-icon
           v-if="name"
-          @click="$emit('update:name','')"
+          @click="$emit('update:name', '')"
           name="close"
           class="cursor-pointer"
         />
@@ -23,8 +24,13 @@
 </template>
 
 <script>
+import { selectAll } from "src/directives/directive-select-all";
+
 export default {
-  props: ["name"]
+  props: ["name"],
+  directives: {
+    selectAll
+  }
 };
 </script>
 

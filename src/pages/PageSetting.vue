@@ -6,14 +6,18 @@
     </div>
     <p
       v-if="
-        search && !Object.keys(tasksTodo).length && !Object.keys(tasksDone).length
+        search &&
+          !Object.keys(tasksTodo).length &&
+          !Object.keys(tasksDone).length
       "
     >
       No search results
     </p>
-    <tasks-none v-if="!Object.keys(tasksTodo).length && !search"></tasks-none>
-    <tasks-todo v-if="Object.keys(tasksTodo).length" :tasksTodo="tasksTodo" />
-    <tasks-done :tasksDone="tasksDone" v-if="Object.keys(tasksDone).length" />
+    <div class="relative-position">
+      <tasks-none v-if="!Object.keys(tasksTodo).length && !search"></tasks-none>
+      <tasks-todo v-if="Object.keys(tasksTodo).length" :tasksTodo="tasksTodo" />
+      <tasks-done :tasksDone="tasksDone" v-if="Object.keys(tasksDone).length" />
+    </div>
 
     <div class="absolute-bottom text-center q-mb-lg">
       <q-btn
@@ -44,8 +48,8 @@ export default {
     "tasks-todo": require("components/Tasks/TasksTodo").default,
     "tasks-done": require("components/Tasks/TasksDone").default,
     "tasks-none": require("components/Tasks/NoTask").default,
-    "search": require("components/Tools/Search").default,
-    "sort": require("components/Tools/Sort").default,
+    search: require("components/Tools/Search").default,
+    sort: require("components/Tools/Sort").default
   },
   computed: {
     ...mapGetters("tasks", ["tasksTodo", "tasksDone"]),

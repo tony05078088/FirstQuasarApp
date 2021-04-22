@@ -1,4 +1,10 @@
 <template>
+<transition
+  appear
+  enter-active-class="animated slideInUp"
+  leave-active-class="animated slideInDown"
+  absolute-top
+>
 <div>
   <list-header
   bgColor="bg-deep-orange-4"
@@ -12,6 +18,7 @@
     ></task>
   </q-list>
 </div>
+</transition>
 </template>
 
 <script>

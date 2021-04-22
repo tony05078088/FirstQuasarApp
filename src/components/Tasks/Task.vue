@@ -2,6 +2,7 @@
   <q-item
     @click="updateTask({ id: id, updates: { completed: !task.completed } })"
     :class="!task.completed ? 'bg-orange-1' : 'bg-grey-4'"
+    v-touch-hold:1000.mouse="showEditTaskModal"
     clickable
     v-ripple
   >
@@ -10,9 +11,10 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label :class="{ 'text-strike': task.completed }">{{
-        task.name
-      }}</q-item-label>
+      <q-item-label
+        :class="{ 'text-strike': task.completed }"
+        v-html="$options.filters.searchHighLight(task.name, search)"
+      ></q-item-label>
     </q-item-section>
 
     <q-item-section v-if="task.dueDate" side>
@@ -22,7 +24,7 @@
         </div>
         <div class="column">
           <q-item-label class="row  justify-end" caption>{{
-            task.dueDate
+            task.dueDate | niceDate
           }}</q-item-label>
           <q-item-label class="row  justify-end" caption>{{
             task.dueTime
@@ -34,7 +36,7 @@
     <q-item-section side>
       <div class="row">
         <q-btn
-          @click.stop="showEditTask = true"
+          @click.stop="showEditTaskModal"
           flat
           round
           dense
@@ -54,17 +56,15 @@
     </q-item-section>
 
     <q-dialog v-model="showEditTask">
-      <edit-task 
-      @close="showAddTask = false"
-      :task="task"
-      :id="id"
-      ></edit-task>
+      <edit-task @close="showEditTask = false" :task="task" :id="id"></edit-task>
     </q-dialog>
   </q-item>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
+import { date } from "quasar";
+
 export default {
   components: {
     editTask: require("components/Modals/Shared/EditTask").default
@@ -75,10 +75,14 @@ export default {
       showEditTask: false
     };
   },
+  computed: {
+    ...mapState("tasks", ["search"])
+  },
   methods: {
     ...mapActions("tasks", ["updateTask", "deleteTask"]),
     promptToDelete(id) {
-      this.$q.dialog({
+      this.$q
+        .dialog({
           title: "Confirm",
           message: "Would you like to delete?",
           cancel: true,
@@ -87,6 +91,23 @@ export default {
         .onOk(() => {
           this.deleteTask(id);
         });
+    },
+    showEditTaskModal() {
+      this.showEditTask = true;
+    }
+  },
+  filters: {
+    niceDate(value) {
+      return date.formatDate(value, "MMM D");
+    },
+    searchHighLight(value, search) {
+      if (search) {
+        let searchRegExp = new RegExp(search, 'ig');
+        return value.replace(searchRegExp, match => {
+          return '<span class="bg-yellow-6">' + match + "</span>";
+        });
+      }
+      return value;
     }
   }
 };

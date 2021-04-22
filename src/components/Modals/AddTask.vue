@@ -4,34 +4,30 @@
 
     <form @submit.prevent="submitForm">
       <q-card-section class="q-pt-none">
-        <modal-task-name 
-        :name.sync="taskToSubmit.name"
-        ref="modalTaskName"></modal-task-name>
+        <modal-task-name
+          :name.sync="taskToSubmit.name"
+          ref="modalTaskName"
+        ></modal-task-name>
 
         <modal-due-date
-        :dueDate.sync="taskToSubmit.dueDate"
-        @noDueDate="clearDueDate"
+          :dueDate.sync="taskToSubmit.dueDate"
+          @noDueDate="clearDueDate"
         ></modal-due-date>
-       <modal-due-time
-       v-if="taskToSubmit.dueDate"
-       :dueTime.sync="taskToSubmit.dueTime"
-       ></modal-due-time>
+        <modal-due-time
+          v-if="taskToSubmit.dueDate"
+          :dueTime.sync="taskToSubmit.dueTime"
+        ></modal-due-time>
       </q-card-section>
-     <modal-button></modal-button>
+      <modal-button></modal-button>
     </form>
   </q-card>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import mixinAddEditTask from "src/mixins/mixin-add-edit-task";
 export default {
-  components: {
-    "modal-header": require("components/Modals/Shared/ModalHeader.vue").default,
-    ModalTaskName: require("components/Modals/Shared/ModalTaskName").default,
-    ModalDueDate: require("components/Modals/Shared/ModalDueDate").default,
-    ModalDueTime: require('components/Modals/Shared/ModalDueTime').default,
-    ModalButton: require('components/Modals/Shared/ModalButton').default
-  },
+  mixins: [mixinAddEditTask],
   data() {
     return {
       taskToSubmit: {
@@ -44,19 +40,9 @@ export default {
   },
   methods: {
     ...mapActions("tasks", ["addTask"]),
-    submitForm() {
-      this.$refs.modalTaskName.$refs.name.validate();
-      if (! this.$refs.modalTaskName.$refs.name.hasError) {
-        this.submitTask();
-      }
-    },
     submitTask() {
       this.addTask(this.taskToSubmit);
       this.$emit("close");
-    },
-    clearDueDate() {
-      this.taskToSubmit.dueDate = "";
-      this.taskToSubmit.dueTime = "";
     }
   }
 };
