@@ -78,7 +78,7 @@ export default {
         {
           label: "Todo",
           icon: "list",
-          to: "/"
+          to: "/todo"
         },
         {
           label: "Settings",
