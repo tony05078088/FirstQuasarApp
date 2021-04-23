@@ -16,10 +16,14 @@
       </p>
       <q-scroll-area class="q-scroll-area-tasks">
         <tasks-none
-          v-if="!Object.keys(tasksTodo).length && !search"
+          v-if="
+            !Object.keys(tasksTodo).length &&
+              !search &&
+              !settings.showTaskInOneList
+          "
         ></tasks-none>
         <tasks-todo
-        class="q-mb-xl"
+          class="q-mb-xl"
           v-if="Object.keys(tasksTodo).length"
           :tasksTodo="tasksTodo"
         />
@@ -64,6 +68,7 @@ export default {
   },
   computed: {
     ...mapGetters("tasks", ["tasksTodo", "tasksDone"]),
+    ...mapGetters("settings", ["settings"]),
     ...mapState("tasks", ["search"])
   },
   mounted() {

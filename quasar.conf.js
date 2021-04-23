@@ -6,7 +6,7 @@
 // Configuration for your app
 // https://v1.quasar.dev/quasar-cli/quasar-conf-js
 
-module.exports = function (/* ctx */) {
+module.exports = function(/* ctx */) {
   return {
     // https://v1.quasar.dev/quasar-cli/supporting-ts
     supportTS: false,
@@ -89,7 +89,7 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ["Dialog"]
+      plugins: ["Dialog", "LocalStorage", "SessionStorage"]
     },
 
     // animations: 'all', // --- includes all animations
@@ -183,4 +183,4 @@ module.exports = function (/* ctx */) {
       }
     }
   };
-}
+};

@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
+import settings from "./store-settings";
 import tasks from "./store-task";
 
-
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 /*
  * If not building with SSR mode, you can
@@ -14,10 +14,11 @@ Vue.use(Vuex)
  * with the Store instance.
  */
 
-export default function (/* { ssrContext } */) {
+export default function(/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      tasks
+      tasks,
+      settings
     },
 
     // enable strict mode (adds overhead!)
@@ -25,5 +26,5 @@ export default function (/* { ssrContext } */) {
     strict: process.env.DEBUGGING
   });
 
-  return Store
+  return Store;
 }
