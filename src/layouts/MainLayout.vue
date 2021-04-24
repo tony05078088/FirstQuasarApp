@@ -1,21 +1,19 @@
 <template>
   <q-layout view="hhr lpR fFf">
     <q-header elevated>
-      <q-toolbar>
-        <!-- <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
-        /> -->
-
+      <q-toolbar>       
         <q-toolbar-title class="absolute-center">
           Williams' Quasar
         </q-toolbar-title>
 
-        <!-- <div>Quasar v{{ $q.version }}</div> -->
+        <q-btn
+          to="/auth"
+          icon-right="face"
+          label="Login"
+          class="absolute-right"
+          flat
+        />
+
       </q-toolbar>
     </q-header>
 
