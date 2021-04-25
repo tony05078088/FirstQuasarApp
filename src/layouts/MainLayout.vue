@@ -1,19 +1,27 @@
 <template>
   <q-layout view="hhr lpR fFf">
     <q-header elevated>
-      <q-toolbar>       
+      <q-toolbar>
         <q-toolbar-title class="absolute-center">
           Williams' Quasar
         </q-toolbar-title>
 
         <q-btn
+          v-if="!loggedIn"
           to="/auth"
           icon-right="face"
           label="Login"
           class="absolute-right"
           flat
         />
-
+        <q-btn
+          @click="logoutUser"
+          v-else
+          icon-right="face"
+          label="Logout"
+          class="absolute-right"
+          flat
+        />
       </q-toolbar>
     </q-header>
 
@@ -67,6 +75,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   name: "MainLayout",
   data() {
@@ -90,6 +99,12 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    ...mapActions("auth", ["logoutUser"]),
+  },
+  computed: {
+    ...mapState("auth", ["loggedIn"])
   }
 };
 </script>
@@ -103,7 +118,7 @@ export default {
 
 .q-drawer {
   .q-router-link--exact-active {
-    color: red
+    color: red;
   }
 }
 </style>

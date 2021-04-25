@@ -1,26 +1,8 @@
 import { uid } from "quasar";
 import Vue from "vue";
+import { firebaseAuth, firebaseDb } from "../boot/firebase";
 const state = {
-  tasks: {
-    ID1: {
-      name: "Go to Shop",
-      completed: false,
-      dueDate: "2021/04/16",
-      dueTime: "09:30"
-    },
-    ID2: {
-      name: "Get Apples",
-      completed: false,
-      dueDate: "2021/04/17",
-      dueTime: "11:30"
-    },
-    ID3: {
-      name: "Get Bananas",
-      completed: false,
-      dueDate: "2021/04/18",
-      dueTime: "12:30"
-    }
-  },
+  tasks: {},
   search: "",
   sort: "dueDate"
 };
@@ -63,6 +45,39 @@ const actions = {
   },
   updateSort({ commit }, value) {
     commit("updateSort", value);
+  },
+  firebaseData({ commit }) {
+    let userId = firebaseAuth.currentUser.uid;
+    let userTasks = firebaseDb.ref(`tasks/${userId}`);
+    console.log(userTasks);
+
+    // child added
+    userTasks.on("child_added", snapshot => {
+      // console.log(snapshot);
+      let task = snapshot.val();
+      console.log(task);
+      let payload = {
+        id: snapshot.key,
+        task: task
+      };
+      commit("addTask", payload);
+    });
+    // child changed
+    userTasks.on("child_changed", snapshot => {
+      // console.log(snapshot);
+      let task = snapshot.val();
+      let payload = {
+        id: snapshot.key,
+        updates: task
+      };
+      commit("updateTask", payload);
+    });
+    // child remove
+        userTasks.on("child_removed", snapshot => {
+          // console.log(snapshot);
+         let taskId = snapshot.key
+          commit("deleteTask", taskId);
+        });
   }
 };
 
@@ -83,7 +98,6 @@ const getters = {
     keysOrdered.forEach(key => {
       tasksSorted[key] = state.tasks[key];
     });
-    console.log(tasksSorted);
     return tasksSorted;
   },
   tasksTodo(state, getters) {

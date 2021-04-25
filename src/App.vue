@@ -7,6 +7,7 @@
 export default {
   mounted() {
     this.$store.dispatch("settings/getSettings");
+    this.$store.dispatch("auth/handleAuthStateChange");
   }
 };
 </script>
