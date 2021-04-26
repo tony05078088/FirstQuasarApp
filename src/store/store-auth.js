@@ -65,7 +65,10 @@ const actions = {
         this.$router.push("/");
         dispatch("tasks/firebaseData", null, { root: true });
       } else {
-        commit("setLoggedIn", false);
+        commit("setLoggedIn", false, {
+          root: true
+        });
+        commit("tasks/setTasksDownoladed", false);
         LocalStorage.set("loggedIn", false);
         this.$router.replace("/auth").catch(err => {
           console.log(err);

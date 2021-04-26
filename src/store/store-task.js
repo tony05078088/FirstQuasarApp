@@ -4,7 +4,8 @@ import { firebaseAuth, firebaseDb } from "../boot/firebase";
 const state = {
   tasks: {},
   search: "",
-  sort: "dueDate"
+  sort: "dueDate",
+  tasksDownloaded: false
 };
 
 const mutations = {
@@ -22,23 +23,27 @@ const mutations = {
   },
   updateSort(state, value) {
     state.sort = value;
+  },
+  setTasksDownoladed(state, value) {
+    state.tasksDownloaded = value;
   }
 };
 
 const actions = {
-  updateTask({ commit }, payload) {
-    commit("updateTask", payload);
+  updateTask({ dispatch }, payload) {
+    // commit("updateTask", payload);
+    dispatch("FirebaseUpdateTask", payload);
   },
-  deleteTask({ commit }, id) {
-    commit("deleteTask", id);
+  deleteTask({ dispatch }, id) {
+    dispatch("FirebaseDeleteTask", id);
   },
-  addTask({ commit }, task) {
+  addTask({ dispatch }, task) {
     let taskId = uid();
     let payload = {
       id: taskId,
       task: task
     };
-    commit("addTask", payload);
+    dispatch("FireBaseAddTask", payload);
   },
   setSearch({ commit }, value) {
     commit("setSearch", value);
@@ -50,6 +55,10 @@ const actions = {
     let userId = firebaseAuth.currentUser.uid;
     let userTasks = firebaseDb.ref(`tasks/${userId}`);
     console.log(userTasks);
+
+    userTasks.once("value", () => {
+      commit("setTasksDownoladed", true);
+    });
 
     // child added
     userTasks.on("child_added", snapshot => {
@@ -73,11 +82,29 @@ const actions = {
       commit("updateTask", payload);
     });
     // child remove
-        userTasks.on("child_removed", snapshot => {
-          // console.log(snapshot);
-         let taskId = snapshot.key
-          commit("deleteTask", taskId);
-        });
+    userTasks.on("child_removed", snapshot => {
+      // console.log(snapshot);
+      let taskId = snapshot.key;
+      commit("deleteTask", taskId);
+    });
+  },
+  FireBaseAddTask({}, payload) {
+    let userId = firebaseAuth.currentUser.uid;
+    let taskRef = firebaseDb.ref(`tasks/${userId}/${payload.id}`);
+    // console.log(payload);
+    // console.log(taskRef);
+    taskRef.set(payload.task);
+  },
+  FirebaseUpdateTask({}, payload) {
+    console.log(payload);
+    let userId = firebaseAuth.currentUser.uid;
+    let taskRef = firebaseDb.ref(`tasks/${userId}/${payload.id}`);
+    taskRef.update(payload.updates);
+  },
+  FirebaseDeleteTask({}, id) {
+    let userId = firebaseAuth.currentUser.uid;
+    let taskRef = firebaseDb.ref(`tasks/${userId}/${id}`);
+    taskRef.remove();
   }
 };
 
